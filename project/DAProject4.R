@@ -58,10 +58,35 @@ model = train(trainX,dfTrain$churn,'nb',trControl=trainControl(method='cv',numbe
 # find the confusion matrix
 prediction = predict(model$finalModel,testX)$class
 truth = dfTest$churn
-result<- confusionMatrix(prediction, truth)
-precision <- result$byClass['Pos Pred Value']    
-recall <- result$byClass['Sensitivity']
+result_NB<- confusionMatrix(prediction, truth)
+precision <- result_NB$byClass['Pos Pred Value']    
+recall <- result_NB$byClass['Sensitivity']
 #accuracy is mentioned already as such
 
+#print result of Naive Bayes
+result_NB
 
+#Make a model for decision tree
+model = train(trainX,dfTrain$churn,method="rpart",trControl=trainControl(method='cv',number=10)) # 10 fold cross-validation set
+prediction = predict(model,testX)
+truth = dfTest$churn
+result_DT<- confusionMatrix(prediction, truth)
+precision <- result_DT$byClass['Pos Pred Value']    
+recall <- result_DT$byClass['Sensitivity']
+#accuracy is mentioned already as such
+
+#print result of Decision Tree
+result_DT
+
+#Make a model for polynomial SVM
+model = train(trainX,dfTrain$churn,'svmPoly',trControl=trainControl(method='cv',number=10)) # 10 fold cross-validation set
+prediction = predict(model,testX)
+truth = dfTest$churn
+result_SVM<- confusionMatrix(prediction, truth)
+precision <- result_SVM$byClass['Pos Pred Value']    
+recall <- result_SVM$byClass['Sensitivity']
+#accuracy is mentioned already as such
+
+#print result of SVM
+result_SVM
 
