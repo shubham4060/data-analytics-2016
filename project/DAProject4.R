@@ -1,3 +1,6 @@
+require('caret')
+require('corrplot')
+
 readData <- read.csv("data.csv",stringsAsFactors = F)
 churnData <-readData
 #View(churnData)
@@ -37,18 +40,16 @@ churnData$voice_mail_plan <- as.numeric(churnData$voice_mail_plan)
 
 corr <- cor(churnData[sapply(churnData,is.numeric)])
 
-library(corrplot)
 corrplot(corr, type = "upper", order = "hclust", tl.col = "black", tl.srt = 45)
 
 # partition the data in 2/3 : 1/3 ratio for training and testing
 
-library(caret)
 inTrain = createDataPartition(churnData$churn, p=2/3, list=FALSE)
 dfTrain=churnData[inTrain,]
 dfTest=churnData[-inTrain,]
 
-trainX = dfTrain[,2:20]
-testX = dfTest[,2:20]
+trainX = dfTrain[,c(2:3,5:20)] #exclude area code
+testX = dfTest[,c(2:3,5:20)] #exclude area code
 dfTest$churn <- as.factor(dfTest$churn)
 dfTrain$churn <- as.factor(dfTrain$churn)
 #The training dataset is in dfTrain and the test dataset in #dfTest
